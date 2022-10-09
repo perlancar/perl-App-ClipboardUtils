@@ -1,5 +1,7 @@
 package App::ClipboardUtils;
 
+use strict;
+
 # AUTHORITY
 # DATE
 # DIST
