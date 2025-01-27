@@ -24,6 +24,7 @@ Note that if you supply a regex, you should not have any capture groups in the
 regex.
 
 MARKDOWN
+    cmdline_aliases => {s=>{}},
 };
 $SPEC{add_clipboard_content}{args}{tee} = {
     summary => 'Pass stdin to stdout',
