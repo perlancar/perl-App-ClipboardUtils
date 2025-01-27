@@ -18,25 +18,50 @@ $SPEC{add_clipboard_content} = clone $Clipboard::Any::SPEC{add_clipboard_content
 $SPEC{add_clipboard_content}{args}{split_by} = {
     summary => 'Split content by specified string/regex, add the split content as multiple clipboard entries',
     schema => ['str_or_re*'],
+    description => <<'MARKDOWN',
+
+Note that if you supply a regex, you should not have any capture groups in the
+regex.
+
+MARKDOWN
+};
+$SPEC{add_clipboard_content}{args}{tee} = {
+    summary => 'Pass stdin to stdout',
+    schema => ['true*'],
+    description => <<'MARKDOWN',
+
+MARKDOWN
+    cmdline_aliases => {t=>{}},
 };
 sub add_clipboard_content {
     my %args = @_;
     my $split_by = delete $args{split_by};
+    my $tee = delete $args{tee};
 
     if (defined $split_by) {
         my $content = delete $args{content};
-        my @split_contents = split $split_by, $content;
-        log_trace "split_by=%s, split_contents=%s", $split_by, \@split_contents;
+        my @split_parts = split /($split_by)/, $content;
+        log_trace "split_by=%s, split_contents=%s", $split_by, \@split_parts;
 
         my $res = [204, "OK (no content)"];
-        for my $part (@split_contents) {
-            $res = Clipboard::Any::add_clipboard_content(
-                %args, content => $part,
-            ); # currently we use the last add_clipboard_content status
+        my $i = 0;
+        while (my ($part, $separator) = splice @split_parts, 0, 2) {
+            if ($tee) {
+                print $part;
+                print $separator if defined $separator;
+            }
+
+            # do not add empty part to clipboard
+            if (length $part) {
+                $res = Clipboard::Any::add_clipboard_content(
+                    %args, content => $part,
+                ); # currently we use the last add_clipboard_content status
+            }
         }
-        $res->[3]{'func.parts'} = @split_contents;
+        $res->[3]{'func.parts'} = @split_parts;
         $res;
     } else {
+        print $args{content} if $tee;
         Clipboard::Any::add_clipboard_content(%args);
     }
 }
