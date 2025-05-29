@@ -67,6 +67,14 @@ sub add_clipboard_content {
     }
 }
 
+$SPEC{tee_clipboard_content} = clone $Clipboard::Any::SPEC{add_clipboard_content};
+$SPEC{tee_clipboard_content}{summary} = 'Shortcut for add-clipboard-content --tee';
+$SPEC{tee_clipboard_content}{description} = '';
+delete $SPEC{tee_clipboard_content}{args}{tee};
+sub tee_clipboard_content {
+    add_clipboard_content(@_, tee => 1);
+}
+
 1;
 # ABSTRACT: CLI utilities related to clipboard
 
