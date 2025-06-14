@@ -50,9 +50,9 @@ Note that when you use this option, the `--content` argument is ignored. Input
 is taken from stdin. With `--tee`, each output will be printed to stdout. After
 eof, the utility will return empty result.
 
-An example for using this option:
+An example for using this option (<prog:safer> is a utility from <pm:App::safer>):
 
-    % clipadd -c safer
+    % clipadd -c safer --tee
     Foo Bar, Co., Ltd.
     foo-bar-co-ltd
     BaZZ, Co., Ltd.
