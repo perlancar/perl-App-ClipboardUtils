@@ -1,10 +1,11 @@
-0.011   2025-10-15  Released-By: PERLANCAR; Urgency: medium
+0.012   2025-10-15  Released-By: PERLANCAR; Urgency: medium
 
-        [cli clipadd]
+        - [cli clipadd] Add option --fragments.
 
-        - Add option --fragments.
 
-        - Add option --command-line (-c).
+0.011   2025-06-15  Released-By: PERLANCAR; Urgency: medium
+
+        - [cli clipadd] Add option --command-line (-c).
 
 
 0.010   2025-05-29  Released-By: PERLANCAR; Urgency: medium

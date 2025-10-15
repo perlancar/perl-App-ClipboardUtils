@@ -43,24 +43,28 @@ Cannot be used together with `--split-by` or `--command-line` option.
 
 Example content:
 
-    line 1
+    FAQS
+    ====
+
+    Q: Will the Thingamagic explode under extreme pressure?
+    A: No doubt.
+
     # BEGIN clipadd id=2
-    line 2
-    line 3
+    Q: How much pressure should I apply to the Thingamagic initially?
+    A: Not that much, really. It will pressurize itself eventually.
     # END clipadd id=2
-    line 4
-    line 5
+
     # BEGIN clipadd id=1
-    line 6
+    Q: What is the appropriate age to start using the Thingamagic?
+    A: It depends on whether your kid is smart (or stupid) enough.
     # END clipadd id=1
-    line 7
-    line 8
 
-After this command:
+    Q: Another question?
+    A: Another half-assed answer.
 
-    % cat content | clipadd --fragments
+Command:
 
-Then two entries will be added to clipboard history: `line6` and `line2\nline3`.
+    % cat faq.txt | clipadd --fragments
 
 Read <pm:Text::Fragment> for more details on text fragments.
 
