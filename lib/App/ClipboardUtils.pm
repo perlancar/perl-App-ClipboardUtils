@@ -25,11 +25,47 @@ our %SPEC;
         schema => ['str_or_re*'],
         description => <<'MARKDOWN',
 
+Cannot be used together with `--fragments` or `--command-line` option.
+
 Note that if you supply a regex, you should not have any capture groups in the
 regex.
 
 MARKDOWN
         cmdline_aliases => {s=>{}},
+    };
+
+    $SPEC{add_clipboard_content}{args}{fragments} = {
+        summary => 'Only add text fragments inside content',
+        schema => ['bool*'],
+        description => <<'MARKDOWN',
+
+Cannot be used together with `--split-by` or `--command-line` option.
+
+Example content:
+
+    line 1
+    # BEGIN clipadd id=2
+    line 2
+    line 3
+    # END clipadd id=2
+    line 4
+    line 5
+    # BEGIN clipadd id=1
+    line 6
+    # END clipadd id=1
+    line 7
+    line 8
+
+After this command:
+
+    % cat content | clipadd --fragments
+
+Then two entries will be added to clipboard history: `line6` and `line2\nline3`.
+
+Read <pm:Text::Fragment> for more details on text fragments.
+
+MARKDOWN
+        #cmdline_aliases => {f=>{}},
     };
 
     $SPEC{add_clipboard_content}{args}{tee} = {
@@ -62,6 +98,10 @@ An example for using this option:
 MARKDOWN
         cmdline_aliases => {c=>{}},
     };
+
+    $SPEC{add_clipboard_content}{args_rels}{"choose_one&"} = [
+        [qw/command_line split_by fragments/],
+    ];
 }
 
 sub add_clipboard_content {
@@ -132,6 +172,28 @@ sub add_clipboard_content {
                 }
             }
             $res->[3]{'func.parts'} = @split_parts;
+            $res;
+        } elsif ($args{fragments}) {
+            require Text::Fragment;
+            my $lfres = Text::Fragment::list_fragments(text => $content, label => "clipadd");
+            return [500, "Can't list fragments in content: $lfres->[0] - $lfres->[1]"]
+                unless $lfres->[0] == 200;
+            my @parts = map { $_->{payload} } sort { $a->{id} <=> $b->{id} } @{ $lfres->[2] };
+
+            my $res = [204, "OK (no content)"];
+            for my $part (@parts) {
+                if ($tee) {
+                    print $part;
+                }
+
+                # do not add empty part to clipboard
+                if (length $part) {
+                    $res = Clipboard::Any::add_clipboard_content(
+                        %args, content => $part,
+                    ); # currently we use the last add_clipboard_content status
+                }
+            }
+            $res->[3]{'func.parts'} = @parts;
             $res;
         } else {
             print $content if $tee;
