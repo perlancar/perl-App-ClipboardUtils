@@ -1,0 +1,74 @@
+package App::ClipboardUtils::Manual::HowTo::ClipaddCookbook; # just to make podweaver happy
+
+use strict;
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
+1;
+# ABSTRACT: Cookbook for clipadd
+
+=head1 DESCRIPTION
+
+L<clipadd> lets you add items to the clipboard. It is
+clipboard-manager-agnostic, supporting backends like B<xclip> and B<Klipper>. It
+also has some convenient features which will be demonstrated in this document.
+
+
+=head1 RECIPES
+
+=head2 Adding ouput from command-line, one line at a time
+
+ % clipadd -c COMMAND
+ % clipadd -c COMMAND -t ; # to see the output on stdout as well
+
+This is convenient because it lets you feed input to a command interactively and
+immediately get the output as clipboard content.
+
+For example, using with L<safer>:
+
+ % clipadd -c safer -t
+ Foo Bar, Inc.
+ foo-bar-inc
+
+I can paste company names and get a slug name to use in file manager to create
+directory, etc.
+
+=head2 Adding text fragments from a text file as clipboard contents
+
+ % clipadd --fragments < FILENAME
+
+For example, when a customer service officer is replying chats from customers,
+she can add a few most frequently asked questions into the clipboard then use
+keyboard shortcuts (e.g. C<Ctrl-Alt-Up> and C<Ctrl-Alt-Down> if configured in
+Klipper) to quickly access those template replies.
+
+Example content of text file:
+
+ FAQS
+ ====
+
+ Question 1
+ # BEGIN clipadd id=2
+ Answer 1
+ # END clipadd id=2
+
+ Question 2
+ # BEGIN clipadd id=1
+ Answer 2
+ # END clipadd id=1
+
+ Question 3
+ # BEGIN clipadd id=3
+ Answer 3
+ # END clipadd id=3
+
+ Question 4
+ Answer 4
+
+
+=head1 SEE ALSO
+
+L<clipadd> (a.k.a. L<add-clipboard-content>, a.k.a. L<ca>).
