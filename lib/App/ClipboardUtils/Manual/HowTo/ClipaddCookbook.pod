@@ -36,16 +36,31 @@ For example, using with L<safer>:
 I can paste company names and get a slug name to use in file manager to create
 directory, etc.
 
+=head2 Adding entries from a text file
+
+ % clipadd --split-by '\n---\n' < FILENAME
+
+For example, adding FAQ entries from a file with this text file:
+
+ Question 1
+ Answer 1
+ ---
+ Question 2
+ Answer 2
+ ---
+ Question 3
+ Answer 3
+
+then you can setup keyboard shortcuts like C<Ctrl-Alt-Up> and C<Ctrl-Alt-Down>
+in B<Klipper> to quickly access those FAQ entries to provide quick answers in
+chats.
+
 =head2 Adding text fragments from a text file as clipboard contents
 
  % clipadd --fragments < FILENAME
 
-For example, when a customer service officer is replying chats from customers,
-she can add a few most frequently asked questions into the clipboard then use
-keyboard shortcuts (e.g. C<Ctrl-Alt-Up> and C<Ctrl-Alt-Down> if configured in
-Klipper) to quickly access those template replies.
-
-Example content of text file:
+This is a variation from the previous recipe. Using fragments allows you to only
+add certain entries and in custom order. Example content of text file:
 
  FAQS
  ====
