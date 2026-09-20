@@ -157,7 +157,7 @@ sub add_clipboard_content {
             if (defined $split_by) {
                 my $content = delete $args{content};
                 my @split_parts = split /($split_by)/, $content;
-                log_trace "split_by=%s, split_contents=%s", $split_by, \@split_parts;
+                log_trace "split_by=%s, num_parts=%d, split_contents=%s", $split_by, scalar(@split_parts), \@split_parts;
 
                 my $i = 0;
                 while (my ($part, $separator) = splice @split_parts, 0, 2) {
