@@ -25,7 +25,7 @@ our %SPEC;
         schema => ['str_or_re*'],
         description => <<'MARKDOWN',
 
-Cannot be used together with `--fragments` or `--command-line` option.
+Cannot be used together with `--fragments` or `--split-by-org-headlines` or `--command-line` option.
 
 Note that if you supply a regex, you should not have any capture groups in the
 regex.
@@ -72,6 +72,34 @@ MARKDOWN
         #cmdline_aliases => {f=>{}},
     };
 
+    $SPEC{add_clipboard_content}{args}{split_by_org_headlines} = {
+        summary => 'Only add contents inside Org headlines',
+        schema => ['bool*'],
+        description => <<'MARKDOWN',
+
+Cannot be used together with `--split-by` or `--command-line` option.
+
+Example content:
+
+    * headline 1
+    Content 1
+    Second line
+    ** headline 1.1
+    Content 1.1
+    ** headline 1.2
+    Content 1.2
+    * headline 2
+    Content 2
+
+Command:
+
+    % cat document.org | clipadd --split-by-org-headlines
+    % cat document.org | clipadd -o
+
+MARKDOWN
+        cmdline_aliases => {o=>{}},
+    };
+
     $SPEC{add_clipboard_content}{args}{tee} = {
         summary => 'Pass stdin to stdout',
         schema => ['true*'],
@@ -104,7 +132,7 @@ MARKDOWN
     };
 
     $SPEC{add_clipboard_content}{args_rels}{"choose_one&"} = [
-        [qw/command_line split_by fragments/],
+        [qw/command_line split_by split_by_org_headlines fragments/],
     ];
 }
 
@@ -113,6 +141,10 @@ sub add_clipboard_content {
     my $split_by = delete $args{split_by};
     my $tee = delete $args{tee};
     my $command_line = $args{command_line};
+
+    if (my $split_by_org_headlines = delete $args{split_by_org_headlines}) {
+        $split_by = qr/^\*+\s.*\R/m;
+    }
 
     if (defined $command_line) {
 
